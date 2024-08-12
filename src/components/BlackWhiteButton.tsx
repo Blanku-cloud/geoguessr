@@ -1,5 +1,6 @@
 interface BlackWhiteButtonProps {
   children: React.ReactNode;
+  onClick?: () => void;
 }
 
 export default function BlackWhiteButton({ children }: BlackWhiteButtonProps) {

@@ -3,11 +3,16 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import LandingPage from "./app/routes/LandingPage";
+import UnderConstruction from "./app/routes/UnderConstruction";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <LandingPage />,
+  },
+  {
+    path: "/under-construction",
+    element: <UnderConstruction />,
   },
 ]);
 

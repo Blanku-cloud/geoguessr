@@ -11,6 +11,7 @@ interface DropdownProps {
   italic: boolean;
   // if langauge has been changed
   onChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
+  currentValue: string; // New prop to reflect the current selected value
 }
 
 export default function Dropdown({
@@ -20,12 +21,14 @@ export default function Dropdown({
   downarrow,
   italic,
   onChange,
+  currentValue,
 }: DropdownProps) {
   const selection = selections.map((item, index) => (
     <option value={item} key={index}>
       {item}
     </option>
   ));
+
   return (
     <div className={`flex items-center gap-2 text-white `}>
       <div className="relative">
@@ -35,6 +38,7 @@ export default function Dropdown({
           className={`appearance-none bg-off-black text-gray-400 outline-none text-center px-7 w-full uppercase cursor-pointer ${
             italic ? "italic" : ""
           }`}
+          value={currentValue} // Reflect the current selected value
         >
           {selection}
         </select>

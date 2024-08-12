@@ -1,3 +1,39 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.landing-shadow {
+  text-shadow: 0 0.125rem 0.5rem #10101c;
+}
+
+.landing-blur {
+  backdrop-filter: blur(1.625rem);
+  background: rgba(0, 0, 0, 0.03);
+}
+
+.landing-main-shadow {
+  box-shadow: 0px -25px 40px 15px #1a1a2e;
+}
+
+.bg-gradient {
+  background-image: radial-gradient(
+      66.5% 221.21% at 136.03% -61.44%,
+      rgba(161, 155, 217, 0.4) 0%,
+      rgba(161, 155, 217, 0) 92.09%
+    ),
+    radial-gradient(
+      93.54% 126.91% at 29.15% -56.29%,
+      rgba(233, 69, 96, 0.7) 0%,
+      rgba(233, 69, 96, 0) 92.09%
+    ),
+    radial-gradient(
+      86.19% 101.84% at -17.13% -24.8%,
+      rgba(0, 162, 254, 0.7) 0%,
+      rgba(0, 162, 254, 0) 92.09%
+    ),
+    linear-gradient(to bottom right, #1a1a2e, #1a1a2e);
+}
+
+.undercon-half {
+  
+}
