@@ -6,6 +6,7 @@ interface GreenButtonProps {
   fontSize: string;
   paddingX: string;
   paddingY: string;
+  type?: string;
 }
 
 export default function GreenButton({

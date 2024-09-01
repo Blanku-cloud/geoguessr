@@ -6,7 +6,7 @@ import {
   createUser,
   getAuthMethod,
 } from "./user.handlers";
-import { hashPassword, userExist } from "./user.middleware";
+import { hashPassword, userExist, userExistDB } from "./user.middleware";
 import express, { Request, Response, NextFunction } from "express";
 
 // initalize user router
@@ -21,7 +21,7 @@ userRoutes.post(
 
 userRoutes.post("/create-user", userExist, hashPassword, createUser);
 
-userRoutes.get("/auth-from-email", checkPasswordGmail);
+userRoutes.get("/auth-from-email", userExistDB, checkPasswordGmail);
 
 userRoutes.get("/get-all-user", getAllUser);
 

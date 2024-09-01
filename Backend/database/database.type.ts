@@ -4,6 +4,8 @@ export interface UserLoginInfo {
   user_pass?: string;
   user_on: boolean;
   created: Date;
+  exp: number;
+  coin: number;
 }
 
 export interface authInfo {

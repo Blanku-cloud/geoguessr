@@ -60,7 +60,12 @@ export async function get_user_email_db(email: string): Promise<UserLoginInfo> {
   const info = auth_info[0] as authInfo;
 
   // verify password
-  const pass_query = `SELECT * FROM user_login_info WHERE id = ?`;
+  const pass_query = `
+  SELECT username, user_on, created, exp, coins, user_pass
+  FROM user_login_info
+    INNER JOIN user_data
+      ON user_login_info.id = user_data.user_login_info_id
+  WHERE id = ?`;
   const [user] = await pool.query<RowDataPacket[]>(pass_query, [
     info.user_login_info_id,
   ]);
@@ -110,10 +115,10 @@ export async function create_user_db(
     user_on,
     created,
   ]);
+
   return id[0].insertId;
 }
 
-// update email
 // use with create_user_db
 export async function connect_auth_method_db(
   user_login_info_id: number,
@@ -122,6 +127,14 @@ export async function connect_auth_method_db(
 ): Promise<void> {
   const query = `INSERT INTO auth_method (user_login_info_id, ${method}_id) VALUES (?, ?)`;
   await pool.query<RowDataPacket[]>(query, [user_login_info_id, authId]);
+}
+
+// use with create_user_db
+export async function connect_user_data_db(
+  user_login_info_id: number
+): Promise<void> {
+  const query = `INSERT INTO user_data (user_login_info_id) VALUES (?)`;
+  await pool.query<RowDataPacket[]>(query, [user_login_info_id]);
 }
 
 export { UserLoginInfo };

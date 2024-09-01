@@ -14,14 +14,14 @@ export const hashPassword = async (
 
     // for google, apple, facebook login
     if (user.method != "email") {
-      let authId = user.authId;
-      const hashId = await bycrpt.hash(authId, 13);
+      let authId: string = user.authId;
+      const hashId: string = await bycrpt.hash(authId, 13);
       user.authId = hashId;
       return next();
     }
 
-    let password = user.password;
-    const hashPassword = await bycrpt.hash(password, 13);
+    let password: string = user.password;
+    const hashPassword: string = await bycrpt.hash(password, 13);
     user.password = hashPassword;
 
     return next();
@@ -31,21 +31,48 @@ export const hashPassword = async (
   }
 };
 
+// for when user try to sign in then tell user they already have an account
 export const userExist = async (
   req: Request<{}, {}, UserExist>,
   res: Response,
   next: NextFunction
 ): Promise<void> => {
   try {
-    // "facebook" | "google" | "apple" | "email"
-    const method = req.body.method;
+    const method: "facebook" | "google" | "apple" | "email" = req.body.method;
     // if user login with email, then email is authId, if anything else then it is the service provided id
-    const authId = req.body.authId;
+    const authId: string | number = req.body.authId;
 
-    const exist = await user_exist_db(method, authId);
+    const exist: Boolean = await user_exist_db(method, authId);
 
     if (exist) {
-      res.status(409).send("User exist");
+      res.status(409).send("User exist already");
+      return;
+    }
+    return next();
+  } catch (error) {
+    errorHandleing(error, res, "userExist");
+  }
+};
+
+// check to make sure user in db
+export const userExistDB = async (
+  req: Request<{}, {}, UserExist>,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const method: "facebook" | "google" | "apple" | "email" = req.body.method;
+    // if user login with email, then email is authId, if anything else then it is the service provided id
+    const authId: string | number = req.body.authId;
+
+    const exist: Boolean = await user_exist_db(method, authId);
+
+    if (!exist) {
+      res.status(404).json({
+        error: "UserNotFound",
+        message: "User does not exist",
+      });
+
       return;
     }
     return next();
