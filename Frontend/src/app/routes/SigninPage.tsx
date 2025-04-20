@@ -1,29 +1,20 @@
 import { Link } from "react-router-dom";
 import AppleSVG from "../../components/AppleSVG";
-import GeoLogo from "../../components/GeoLogo";
 import GoogleSVG from "../../components/GoogleSVG";
-import LangaugeDropdown from "../../components/LanguageDropdown";
 import MetaSVG from "../../components/MetaSVG";
-import NavigationBar from "../../components/NavagationBar";
 import GreenButton from "../../components/GreenButton";
 import WaysToLogin from "../../components/WaysToLogin";
 import MessageBoxProps from "../../components/MessageBox";
 import WarningSVG from "../../components/WarningSVG";
 import ErrorSVG from "../../components/ErrorSVG";
 import { useState } from "react";
-import { UserLoginInfo } from "../../types/types";
-
-function LeftContent({ color }: { color: string }) {
-  return (
-    <div className="w-28">
-      <GeoLogo color={color} />
-    </div>
-  );
-}
-
-function RightContent() {
-  return <LangaugeDropdown textColor="" />;
-}
+import { Dispatch, SetStateAction } from "react";
+import request from "../../helper";
+import { jwtDecode } from "jwt-decode";
+import { useApp } from "../../stores/UseUser";
+import { LoginInfoSucess, User } from "../../types/types";
+import SignNavBar from "../../components/SignNavBar";
+import { useNavigate } from "react-router-dom";
 
 const formOfSignIn: {
   from: string;
@@ -85,61 +76,68 @@ function DisplaySignInEmail({
   }
 }
 
-async function emailLogin(authId: string, password: string): Promise<void> {
-  const url: string = "http://localhost:8080/api/user/auth-from-email";
-  const request: Request = new Request(url, {
-    method: "POST",
-    body: JSON.stringify({
-      authId: authId,
-      password: password,
-      method: "email",
-    }),
-  });
-  try {
-    const response = await fetch(request).then(async (res) => {
-      if (!res.ok) {
-        const text = await res.text();
-        throw new Error(text);
-      } else {
-        return res.json();
-      }
-    });
-
-    const userData: Promise<UserLoginInfo> = await response.json();
-    console.log(userData);
-  } catch (error: unknown) {
-    console.error(error);
-  }
-}
-
 export default function SignupPage() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  ("");
-  const [showSignInEmail, setShowSignInEmail] = useState(false);
-
-  const color = "#2ecacc";
+  const navigate = useNavigate();
+  async function emailLogin(
+    authId: string,
+    password: string,
+    setErrorMessage: Dispatch<SetStateAction<string>>,
+    setUser: React.Dispatch<React.SetStateAction<User | null>>
+  ): Promise<boolean> {
+    const url: string = "api/user/auth-from-email";
+    const options = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        authId: authId,
+        password: password,
+        method: "email",
+      }),
+    };
+    request<LoginInfoSucess>(url, options)
+      .then((data) => {
+        console.log("Success:", data);
+        setUser(jwtDecode(data.token));
+        localStorage.setItem("user", JSON.stringify(jwtDecode(data.token)));
+        navigate("/home");
+      })
+      .catch((error) => {
+        setErrorMessage(error.message);
+        console.error("Error:", error);
+        return false;
+      });
+    return true;
+  }
+  const [showSignInEmail, setShowSignInEmail] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string>("");
+  const { setUser } = useApp();
 
   const onSubmit = (): boolean | void => {
     if (!email || !password) {
       setShowSignInEmail(true);
     } else {
-      emailLogin(email, password);
+      emailLogin(email, password, setErrorMessage, setUser);
     }
   };
 
   return (
     <div className="signup-bg h-screen font-titilliumWeb">
-      <NavigationBar
-        leftContent={<LeftContent color={color} />}
-        rightContent={<RightContent />}
-        bgColor="none"
-        height="h-[5rem]"
-      />
+      <SignNavBar />
       <div className="flex justify-center items-center flex-col h-[calc(100vh-5rem)]">
         <div className="w-80 flex flex-col items-center">
           {showSignInEmail && (
             <DisplaySignInEmail emailFeild={email} passwordFeild={password} />
+          )}
+          {errorMessage && (
+            <MessageBoxProps
+              color="#e94560"
+              message={errorMessage}
+              logo={<ErrorSVG />}
+            />
           )}
           <form
             action="submit"
@@ -193,7 +191,9 @@ export default function SignupPage() {
             <WaysToLogin formsLogin={formOfSignIn} />
           </div>
           <div className="mt-10 text-sm text-gray-400 underline flex justify-center items-center cursor-pointer">
-            <p className="hover:text-white">Create an account</p>
+            <Link to="/signup" className="text-white">
+              Create an account
+            </Link>
           </div>
         </div>
       </div>

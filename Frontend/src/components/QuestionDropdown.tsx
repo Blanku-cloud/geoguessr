@@ -26,9 +26,10 @@ export default function QestionDropdown({
       </div>
 
       {click && (
-        <div className="border-t-2 border-gray-600 mt-3 pt-3 flex flex-col items-center">
+        <div className="border-t-2 border-gray-600 mt-3 pt-3">
           <p>{text}</p>
-          {button}
+          <div className="w-full flex justify-center">{button}</div>
+          
         </div>
       )}
     </div>

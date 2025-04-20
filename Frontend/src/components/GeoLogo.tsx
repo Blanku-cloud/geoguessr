@@ -1,11 +1,12 @@
 interface GeoLogoProps {
   color: string;
+  width: string;
 }
 
-export default function GeoLogo({ color }: GeoLogoProps) {
+export default function GeoLogo({ color, width }: GeoLogoProps) {
   return (
     <svg
-      width="208"
+      width={width}
       height="40"
       viewBox="0 0 208 40"
       fill="none"

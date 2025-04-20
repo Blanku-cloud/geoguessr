@@ -1,3 +1,4 @@
+
 interface WaysToLoginProps {
   formsLogin: {
     from: string;
@@ -5,6 +6,7 @@ interface WaysToLoginProps {
     color: string;
     textColor: string;
     border: boolean;
+    handleClick?: () => void;
   }[];
 }
 
@@ -12,6 +14,7 @@ export default function WaysToLogin({ formsLogin }: WaysToLoginProps) {
   return formsLogin.map((e, index) => (
     <button
       key={index}
+      onClick={e.handleClick}
       className={`
         hover:scale-105 font-bold
         w-80 flex justify-center items-center h-10 rounded-full ${

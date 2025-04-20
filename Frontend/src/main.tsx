@@ -6,6 +6,9 @@ import LandingPage from "./app/routes/LandingPage";
 import UnderConstructionPage from "./app/routes/UnderConstruction";
 import SigninPage from "./app/routes/SigninPage";
 import SignupPage from "./app/routes/SignupPage";
+import { AppProvider } from "./stores/UserContext.tsx";
+import HomePage from "./app/routes/HomePage.tsx";
+import Campaign from "./app/routes/Campaign.tsx";
 
 const router = createBrowserRouter([
   {
@@ -24,10 +27,20 @@ const router = createBrowserRouter([
     path: "/signin",
     element: <SigninPage />,
   },
+  {
+    path: "/home",
+    element: <HomePage />,
+  },
+  {
+    path: "/campaign",
+    element: <Campaign />,
+  },
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <AppProvider>
+      <RouterProvider router={router} />
+    </AppProvider>
   </React.StrictMode>
 );

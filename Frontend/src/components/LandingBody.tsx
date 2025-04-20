@@ -9,15 +9,9 @@ import BlackWhiteButton from "./BlackWhiteButton";
 import { Link } from "react-router-dom";
 import React from "react";
 import GreenButton from "./GreenButton";
+import { EmoteData } from "../types/types";
 
-const emoteData: {
-  title: string;
-  text: string;
-  src: string;
-  index: number;
-  border: boolean;
-  button?: React.ReactNode;
-}[] = [
+const emoteData: EmoteData[] = [
   {
     title: "Explore the world",
     text: "Get dropped anywhere from the busy streets of New York to the beautiful beaches of Bali.",
@@ -136,10 +130,8 @@ export default function LandingBody() {
         ))}
       </div>
       <div>
-        {" "}
         <h3 className="text-white text-2xl mt-16">
-          This is a clone of Geoguessr made for fun. This is not the real
-          Geoguessr.
+          This is a clone of Geoguessr made for fun.
         </h3>
       </div>
     </div>

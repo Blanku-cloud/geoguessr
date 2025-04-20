@@ -14,7 +14,7 @@ export default function LandingMain({ color }: LandingMainProps) {
         <div className="w-[50rem] flex flex-col justify-center min-h-64 items-center gap-3">
           <div className="">
             <div className="text-white uppercase text-center font-bold flex flex-col items-center m-2">
-              <GeoLogo color={color} />
+              <GeoLogo color={color} width="208" />
               <div className="flex flex-col justify-center items-center gap-5 ">
                 <h1 className="text-7xl italic landing-shadow w-fit">
                   Explore the world!
@@ -31,7 +31,7 @@ export default function LandingMain({ color }: LandingMainProps) {
           </div>
           <div className="mt-4">
             <GreenButton height="h-16" paddingX="px-5" paddingY="py-1" className="" fontSize="text-base">
-              <Link to="/" className="font-bold text-2xl landing-shadow p-5">
+              <Link to="/signup" className="font-bold text-2xl landing-shadow p-5">
                 PLAY NOW
               </Link>
             </GreenButton>

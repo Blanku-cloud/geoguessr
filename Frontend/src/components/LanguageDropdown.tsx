@@ -25,7 +25,7 @@ export default function LangaugeDropdown({textColor} : LangaugeDropdownProp) {
     setLangauge(event.target.value);
   };
 
-  const message = `${langauge} is not supported currently. ${"\n"} Thank you for you undersanding.`;
+  const message = `${langauge} is not supported currently. ${"\n"} Thank you for your undersanding.`;
 
   return (
     <>

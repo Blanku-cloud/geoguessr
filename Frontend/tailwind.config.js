@@ -19,7 +19,9 @@ export default {
       backgroundImage: {
         'hero': "url('./assets/hero.webp')",
         'landing-map': "url('./assets/map.webp')",
+        'home-bg': "url('./assets/homebackground.jpg')"
       },
+      
     },
     plugins: [],
   }
