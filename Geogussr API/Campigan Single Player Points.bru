@@ -1,0 +1,18 @@
+meta {
+  name: Campigan Single Player Points
+  type: http
+  seq: 8
+}
+
+post {
+  url: http://localhost:8080/api/campaign/cal-points
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "lat": 0,
+    "lng": 0
+  }
+}

@@ -15,7 +15,18 @@ const pool = mysql
   .promise();
 
 export async function get_all_user_db(): Promise<UserLoginInfo[]> {
-  const query = "SELECT * FROM user_login_info";
+  const query = `
+  SELECT 
+    user_login_info.*, 
+    auth_method.facebook_id, 
+    auth_method.google_id, 
+    auth_method.email_id, 
+    user_data.xp, 
+    user_data.currentLevel,
+    user_data.coins 
+  FROM user_login_info 
+  INNER JOIN auth_method ON user_login_info.id = auth_method.user_login_info_id
+  INNER JOIN user_data ON user_login_info.id = user_data.user_login_info_id`;
   const [all_user] = await pool.query<RowDataPacket[]>(query);
   return all_user as UserLoginInfo[];
 }
@@ -53,15 +64,21 @@ async function get_user(
 }
 
 // user must exist
-export async function get_user_email_db(email: string): Promise<UserLoginInfo> {
+export async function get_user_email_db(
+  email: string
+): Promise<UserLoginInfo | null> {
   // verify email
   const auth_query = `SELECT * FROM auth_method WHERE email_id = ?`;
   const [auth_info] = await pool.query<RowDataPacket[]>(auth_query, [email]);
+  if (!auth_info.length) {
+    return null;
+  }
+
   const info = auth_info[0] as authInfo;
 
   // verify password
   const pass_query = `
-  SELECT username, user_on, created, exp, coins, user_pass
+  SELECT username, user_on, created, xp, currentLevel, coins, user_pass
   FROM user_login_info
     INNER JOIN user_data
       ON user_login_info.id = user_data.user_login_info_id
@@ -97,24 +114,22 @@ export async function create_user_db(
   created: Date,
   user_pass?: string
 ): Promise<number> {
+  let id;
+  // add user to user_login_info, and depending on if they have password
   if (user_pass) {
     const query =
       "INSERT INTO user_login_info (username, user_pass, user_on, created) VALUES (?, ?, ?, ?)";
-    const id = await pool.query<ResultSetHeader>(query, [
+    id = await pool.query<ResultSetHeader>(query, [
       username,
       user_pass,
       user_on,
       created,
     ]);
-    return id[0].insertId;
+  } else {
+    const query =
+      "INSERT INTO user_login_info (username, user_on, created) VALUES (?, ?, ?)";
+    id = await pool.query<ResultSetHeader>(query, [username, user_on, created]);
   }
-  const query =
-    "INSERT INTO user_login_info (username, user_on, created) VALUES (?, ?, ?)";
-  const id = await pool.query<ResultSetHeader>(query, [
-    username,
-    user_on,
-    created,
-  ]);
 
   return id[0].insertId;
 }

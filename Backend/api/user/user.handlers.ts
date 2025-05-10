@@ -18,7 +18,7 @@ import { generateJWT } from "./user.helper";
 export const getAllUser = async (
   req: Request<{}, {}, {}>,
   res: Response,
-  next: NextFunction,
+  next: NextFunction
 ): Promise<void> => {
   try {
     const user: UserLoginInfo[] = await get_all_user_db();
@@ -31,7 +31,7 @@ export const getAllUser = async (
 export const getAuthMethod = async (
   req: Request<{}, {}, {}>,
   res: Response,
-  next: NextFunction,
+  next: NextFunction
 ): Promise<void> => {
   try {
     const user: authMethod[] = await get_auth_method_db();
@@ -44,7 +44,7 @@ export const getAuthMethod = async (
 export const createUserThrGmail = async (
   req: Request<{}, {}, CreateUserEmail>,
   res: Response,
-  next: NextFunction,
+  next: NextFunction
 ): Promise<void> => {
   try {
     const { username, password, method, authId } = req.body;
@@ -55,7 +55,7 @@ export const createUserThrGmail = async (
       username,
       userOn,
       time,
-      password,
+      password
     );
 
     await connect_auth_method_db(user_login_info_id, method, authId);
@@ -77,8 +77,9 @@ export const createUserThrGmail = async (
 export const createUser = async (
   req: Request<{}, {}, CreateUser>,
   res: Response,
-  next: NextFunction,
+  next: NextFunction
 ): Promise<void> => {
+  console.log("created user");
   try {
     const { authId, method, username } = req.body;
     const userOn: true = true;
@@ -87,7 +88,7 @@ export const createUser = async (
     const user_login_info_id: number = await create_user_db(
       username,
       userOn,
-      time,
+      time
     );
 
     await connect_auth_method_db(user_login_info_id, method, authId);
@@ -102,16 +103,17 @@ export const createUser = async (
 // login with email
 export const checkPasswordGmail = async (
   req: Request,
-  res: Response,
+  res: Response
 ): Promise<void> => {
   try {
     const { password, authId: email } = req.body; // Destructure email and password directly
     let user_data = await get_user_email_db(email);
-    const userOrPassError = () => res.status(401).json({
-      error: true,
-      message: "username or password is incorrect.",
-      code: 401,
-    });
+    const userOrPassError = () =>
+      res.status(401).json({
+        error: true,
+        message: "username or password is incorrect.",
+        code: 401,
+      });
 
     if (!user_data) {
       userOrPassError();
@@ -119,7 +121,7 @@ export const checkPasswordGmail = async (
     }
     const isMatch: boolean = await bcrypt.compare(
       password,
-      user_data.user_pass as string,
+      user_data.user_pass as string
     );
 
     if (!isMatch) {

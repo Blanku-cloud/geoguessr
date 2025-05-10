@@ -3,20 +3,32 @@ import routes from "./routes";
 import dotenv from "dotenv";
 import bodyParser from "body-parser";
 import cors from "cors";
+import session from "express-session";
 
 // configures dotenv to work in your application
 dotenv.config();
 const app = express();
 const corsOptions = {
-  origin: process.env.ORIGIN,
+  origin: "http://localhost:5173",
   optionsSuccessStatus: 200,
+  methods: "GET,POST,PUT,DELETE",
+  allowedHeaders: "Content-Type",
+  credentials: true,
 };
 
 const PORT = process.env.PORT;
 
 app.use(bodyParser.json());
-app.use("/", routes);
-app.use(cors(corsOptions));
+
+app.use(
+  session({
+    secret: "your-secret-key",
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false, maxAge: 1000 * 60 * 60 },
+  })
+);
+app.use("/", cors(corsOptions), routes);
 
 app
   .listen(PORT, () => {

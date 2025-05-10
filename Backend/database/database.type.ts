@@ -6,6 +6,9 @@ export interface UserLoginInfo {
   created: Date;
   exp: number;
   coin: number;
+  google_id: string | null;
+  facebook_id: string | null;
+  email_id: string | null;
 }
 
 export interface authInfo {

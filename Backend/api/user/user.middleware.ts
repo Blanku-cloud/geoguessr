@@ -43,36 +43,14 @@ export const userExist = async (
     const authId: string | number = req.body.authId;
 
     const exist: Boolean = await user_exist_db(method, authId);
+    console.log(req.body);
 
     if (exist) {
-      res.status(409).send("User exist already");
-      return;
-    }
-    return next();
-  } catch (error) {
-    errorHandleing(error, res, "userExist");
-  }
-};
-
-// check to make sure user in db
-export const userExistDB = async (
-  req: Request<{}, {}, UserExist>,
-  res: Response,
-  next: NextFunction
-): Promise<void> => {
-  try {
-    const method: "facebook" | "google" | "apple" | "email" = req.body.method;
-    // if user login with email, then email is authId, if anything else then it is the service provided id
-    const authId: string | number = req.body.authId;
-
-    const exist: Boolean = await user_exist_db(method, authId);
-
-    if (!exist) {
-      res.status(404).json({
-        error: "UserNotFound",
-        message: "User does not exist",
+      res.status(409).json({
+        message:"User exist already",
+        error: true,
+        code: 409,
       });
-
       return;
     }
     return next();
@@ -80,3 +58,5 @@ export const userExistDB = async (
     errorHandleing(error, res, "userExist");
   }
 };
+
+

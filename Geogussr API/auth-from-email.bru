@@ -1,0 +1,19 @@
+meta {
+  name: auth-from-email
+  type: http
+  seq: 3
+}
+
+post {
+  url: http://localhost:8080/api/user/auth-from-email
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "password": "password1",
+    "authId": "mecccow@mecow.com",
+    "method": "email"
+  }
+}

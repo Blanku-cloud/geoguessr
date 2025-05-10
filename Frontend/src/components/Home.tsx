@@ -7,6 +7,8 @@ import request from "../helper";
 import { GenerateLocation, PlayButtonCampaign } from "../types/types";
 import { useNavigate } from "react-router-dom";
 
+
+// updating home
 export default function Home() {
   const { setCampaignData } = useApp();
   const navigate = useNavigate();
